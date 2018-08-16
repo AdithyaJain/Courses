@@ -1,0 +1,558 @@
+#+TITLE: Assignment 7
+#+AUTHOR: Adithya Jain
+
+#+BEGIN_SRC js :tangle main.js
+//MAIN/
+
+function addNewStudent(roll, name, year)
+{
+    function isName(Name)
+    {
+        var non_alphabet_pattern = new RegExp('[^a-zA-Z. ]+');
+        var response = non_alphabet_pattern.exec(Name);
+        if (typeof Name === "string" && response === null) return true;
+        else { alert("Name should contain only alphabets and spaces"); return false;}
+    }
+    function isRoll(Roll)
+    {
+        if(parseInt(Roll) >= 20110000 && parseInt(Roll) <= 20169999) return true;
+        else { alert("Roll should be 2011XXXX - 2016XXXX"); return false;}
+    }
+    function isYear(Year)
+    {
+        if(Year.length === 3 && Year.charAt(0) === 'U' && Year.charAt(1) === 'G' && Year.charAt(2) >= '1' && Year.charAt(2) <= '6') return true;
+        else { alert("Year should be UGx where x = {1-6}"); return false;}
+    }
+    function isId(id)
+    {
+        if(id.length === 6)
+        {
+            var flag = true;
+            for(i=0; i<6; i++)
+            {
+                if(i<=2 && (id.charAt(i) < 'A' || id.charAt(i) > 'Z')){ flag = false; break;}
+                if(i>2 && (id.charAt(i) <'0' || id.charAt(i) > '9')){ flag = false; break;}
+            }
+        }
+        if(flag) return true;
+        else{ alert("Course Id should be YYYXXX Y => [A-Z], X => [0-9]"); return false;}
+    }
+    if(isName(name) && isRoll(roll) && isYear(year))
+    {       
+    $.ajax({
+            url: 'http://0.0.0.0:5000/addStudent',
+            method: 'POST',
+            data: {
+                roll: roll,
+                name: name,
+                year: year,
+            },
+            success: function(response){alert(response);},
+            error: function(response){alert(response);},
+        });
+    }
+}
+
+function addNewStudentOnClick()
+{
+    roll = $('#addNewStudent_roll').val(), name = $('#addNewStudent_name').val(), year = $('#addNewStudent_year').val();
+    addNewStudent(roll, name, year);
+    viewAllStudents();
+}
+
+function addNewCourse(id, name)
+{
+    function isId(id)
+    {
+        if(id.length === 6)
+        {
+            var flag = true;
+            for(i=0; i<6; i++)
+            {
+                if(i<=2 && (id.charAt(i) < 'A' || id.charAt(i) > 'Z')){ flag = false; break;}
+                if(i>2 && (id.charAt(i) <'0' || id.charAt(i) > '9')){ flag = false; break;}
+            }
+        }
+        if(flag) return true;
+        else{ alert("Course Id should be YYYXXX Y => [A-Z], X => [0-9]"); return false;}
+    }
+    function isName(Name)
+    {
+        var non_alphabet_pattern = new RegExp('[^a-zA-Z. ]+');
+        var response = non_alphabet_pattern.exec(Name);
+        if (typeof Name === "string" && response === null) return true;
+        else { alert("Course Name should contain only alphabets and spaces"); return false;}
+    }
+    if(isId(id) && isName(name))
+    {
+        $.ajax({
+            url: 'http://0.0.0.0:5000/addCourse',
+            method: 'POST',
+            data:{
+                id: id,
+                name: name,
+            },
+            success: function(response){alert(response);},
+            error: function(response){alert(response);}
+        });
+    }
+}
+
+function addNewCourseOnclick()
+{
+    var id = $('#addNewCourse_id').val(), name = $('#addNewCourse_name').val();
+    addNewCourse(id, name);
+    viewAllCourses();
+}
+
+function viewAllStudents()
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/students',
+        method: 'GET',
+        success: function(response)
+        {
+            function addOptToSelect(hashidstring, value)
+            {       
+                $selectopt = '';
+                $selectopt += '<option value="'+value+'" >'+value+'</option>'
+                $(hashidstring).html($selectopt);       
+            }
+            $tablerow = '';
+            $addStudentToCourse = '';
+            $dropStudentFromCourse = '';
+            $removeStudent = '';
+            $addCourseToStudent = '';
+            for(var i in response.students)
+            {
+                var roll = response.students[i].roll, name = response.students[i].name, year = response.students[i].year;
+                $tablerow += '<tr id="'+roll+'"><td>'+roll+'</td><td>'+name+'</td><td>'+year+'</td></tr>';
+                $addStudentToCourse += '<option value="'+roll+'" >'+roll+'</option>';
+                $dropStudentFromCourse += '<option value="'+roll+'" >'+roll+'</option>';
+                $removeStudent += '<option value="'+roll+'" >'+roll+'</option>';
+                $addCourseToStudent += '<option value="'+roll+'" >'+roll+'</option>';
+            }
+            $("#allStudentsTable").html($tablerow);
+            $('#addStudentToCourse_student').html($addStudentToCourse);
+            $('#dropStudentFromCourse_student').html($dropStudentFromCourse);
+            $('#removeStudent').html($removeStudent);
+            $('#coursesTakenByStudent').html($addCourseToStudent);
+        },
+        error: function(response){ alert(response);},
+    });
+}
+
+function viewAllCourses()
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/courses',
+        method: 'GET',
+        success: function(response)
+        {
+            $tablerow = '';
+            $addStudentToCourse = '';
+            $dropStudentFromCourse = '';
+            $removeCourse = '';
+            $studentAppliedForCourse = '';
+            for(var i in response.courses)
+            {
+                var id = response.courses[i].id, name = response.courses[i].name;
+                $tablerow += '<tr id="'+id+'"><td>'+id+'</td><td>'+name+'</td></tr>';
+                $addStudentToCourse += '<option value="'+id+'" >'+id+'</option>';
+                $dropStudentFromCourse += '<option value="'+id+'" >'+id+'</option>';
+                $removeCourse += '<option value="'+id+'" >'+id+'</option>';
+                $studentAppliedForCourse += '<option value="'+id+'" >'+id+'</option>';
+            }
+            $("#allCoursesTable").html($tablerow);
+            $('#addStudentToCourse_course').html($addStudentToCourse);
+            $('#dropStudentFromCourse_course').html($dropStudentFromCourse);
+            $('#removeCourse').html($removeCourse);
+            $('#studentAppliedForCourse').html($studentAppliedForCourse);
+        },
+        error: function(response){ alert(response);},
+    });
+}
+
+function addStudentToCourse(roll, id)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/enroll',
+        method: 'POST',
+        data:{
+            roll: roll,
+            id: id,
+        },
+        success: function(response){ alert(response);},
+        error: function(response){ alert(response);},
+    });
+}
+
+function addStudentToCourseOnClick()
+{
+    var roll = $('#addStudentToCourse_student').val(), id = $('#addStudentToCourse_course').val();
+    addStudentToCourse(roll, id);
+}
+
+function dropStudentFromCourse(roll, id)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/drop',
+        method: 'POST',
+        data:{
+            roll: roll,
+            id: id,
+        },
+        success: function(response){ alert(response);},
+        error: function(response){ alert(response);},
+    });
+}
+
+function dropStudentFromCourseOnClick()
+{
+    var roll = $('#dropStudentFromCourse_student').val(), id = $('#dropStudentFromCourse_course').val();
+    dropStudentFromCourse(roll, id);
+}
+
+function removeCourse(id)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/deleteCourse',
+        method: 'POST',
+        data:{
+            id: id,
+        },
+        success: function(response){alert(response);},
+        error: function(response){alert(response);},
+    });
+}
+
+function removeCourseOnClick()
+{
+    var id = $('#removeCourse').val();
+    removeCourse(id);
+    viewAllCourses();
+}
+
+function removeStudent(roll)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/deleteStudent',
+        method: 'POST',
+        data:{
+            roll: roll,
+        },
+        success: function(response){alert(response);},
+        error: function(response){alert(response);},
+    });
+}
+
+function removeStudentOnClick()
+{
+    var roll = $('#removeStudent').val();
+    removeStudent(roll);
+    viewAllStudents();
+}
+
+function viewEnrolled(id)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/studentsEnrolled',
+        method: 'GET',
+        data:{
+            id: id,
+        },
+        success: function(response)
+        {
+            ans = '';
+            for(var i in response.students)
+            {
+                ans += '<tr><td>'+response.students[i].roll+'</td><td>'+response.students[i].name+'</td><td>'+response.students[i].year+'</td></tr>'
+            }
+            $('#studentAppliedForCourseTable').html(ans);
+        },
+        error: function(response){alert(response);},
+    });
+}
+
+function viewEnrolledOnClick()
+{
+    var id = $('#studentAppliedForCourse').val();
+    viewEnrolled(id);
+}
+
+function viewCoursesTaken(roll)
+{
+    $.ajax({
+        url: 'http://0.0.0.0:5000/coursesTaken',
+        method: 'GET',
+        data:{
+            roll: roll,
+        },
+        success: function(response)
+        {
+            ans = '';
+            for(var i in response.courses)
+            {
+                ans += '<tr><td>'+response.courses[i].id+'</td><td>'+response.courses[i].name+'</td><tr>';
+            }
+            $('#coursesTakenByStudentTable').html(ans);
+        },
+        error: function(response){alert(response);},
+    });
+}
+
+function viewCoursesTakenOnClick()
+{
+    var roll = $('#coursesTakenByStudent').val();
+    viewCoursesTaken(roll);
+}
+
+$(document).ready(function(){
+    viewAllStudents();
+    viewAllCourses();
+});
+
+module.exports.addNewStudent = addNewStudent;
+module.exports.addNewCourse = addNewCourse;
+module.exports.viewAllStudents = viewAllStudents;
+module.exports.viewAllCourses = viewAllCourses;
+module.exports.addStudentToCourse = addStudentToCourse;
+module.exports.dropStudentFromCourse = dropStudentFromCourse;
+module.exports.removeCourse = removeCourse;
+module.exports.removeStudent = removeStudent;
+module.exports.viewEnrolled = viewEnrolled;
+module.exports.viewCoursesTaken = viewCoursesTaken;
+#+END_SRC
+
+#+BEGIN_SRC html :tangle index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+        <title>ITWS Assignment 6 | [20161109]</title>
+        <style>
+        body{
+        	background-color: #f2f2f2;
+        }
+		h1 {
+    		text-align: center;
+		}
+
+		h2 {
+    		text-align: center;
+		}
+
+		h3 {
+    		text-align: center;
+		} 
+		table {
+    		border-collapse: collapse;
+    		width: 100%;
+		}
+
+		th, td , tr{
+    		padding: 8px;
+    		text-align: center;
+    		border-bottom: 1px solid #ddd;
+		}
+		tr:hover{
+			background-color: #e6e6e6
+		}
+		fieldset{
+			display: block;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow:0 0 5px #999;
+		}
+		legend {
+			background: #f2f2f2;
+		}
+</style>
+</head>
+
+
+<body>
+        <h1 >Javascript OOP</h1>
+
+        
+        <div class="addNewStudent" align="center">
+        <fieldset><legend>Add a New Student</legend>
+        <form id="addNewStudent">
+      		<input name="roll" type="text" id="addNewStudent_roll" placeholder="Roll Number" value=""><br/>
+      		<input name="name" type="text" id="addNewStudent_name" placeholder="Name" value=""><br/>
+      		<input name="year" type="text" id="addNewStudent_year" placeholder="Year" value=""><br/>
+      		<button type="button" onclick="addNewStudentOnClick()">ADD</button>
+      	</div>
+        </form>
+        </fieldset>
+		<br/>        
+
+
+
+        <div class='addNewCourse' align='center'>
+        <fieldset><legend>Add a New Course</legend>
+        <form id="addNewCourse">
+      		<input name="id" type="text" id="addNewCourse_id" placeholder="Course Id" value=""><br/>
+      		<input name="name" type="text" id="addNewCourse_name" placeholder="Course Name" value=""><br/>
+      		<button type="button" onclick="addNewCourseOnclick()">ADD</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+        
+
+
+        <div class="allStudents" align="center">
+        <fieldset><legend>All Students</legend>
+        <table id="allStudents">
+       	<thead>
+        	<tr>
+                <td>Roll</td>
+                <td>Name</td>
+                <td>Year</td>
+        	</tr>
+       	</thead>
+       		<tbody id="allStudentsTable">
+       
+       		</tbody>
+        </table>
+        </fieldset>
+        </div>
+		<br />
+
+        
+
+        <div class="allCourses" align="center">
+        <fieldset><legend>All Courses</legend>
+        <table id="allCourses">
+       	<thead>
+        	<tr>
+                <td>Id</td>
+                <td>Name</td>
+        	</tr>
+       	</thead>
+       	<tbody id="allCoursesTable">       
+       	</tbody>
+        </table>
+        </fieldset>
+        </div>
+        <br/>
+        
+
+
+        <div class="addStudentToCourse" align="center">
+        <fieldset><legend>Add Student to a Course</legend>
+        <form>
+                <select id="addStudentToCourse_student" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <select id="addStudentToCourse_course" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="addStudentToCourseOnClick()">ADD</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+        <div class="dropStudentFromCourse" align="center">
+        <fieldset><legend>Drop Student from a Course</legend>
+        <form>
+                <select id="dropStudentFromCourse_student" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <select id="dropStudentFromCourse_course" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="dropStudentFromCourseOnClick()">DROP</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+        <div class="removeCourse" align="center">
+        <fieldset><legend>Remove a Course from Course List</legend>
+        <form>
+                <select id="removeCourse" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="removeCourseOnClick()">REMOVE</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+
+        <div class="removeStudent" align="center">
+        <fieldset><legend>Remove a Student from Students List</legend>
+        <form>
+                <select id="removeStudent" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <button type="button" onclick="removeStudentOnClick()">REMOVE</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+        <div class="studentAppliedForCourse" align="center">
+        <fieldset><legend>Table To See Students Applied For a Course</legend>
+        <form>
+                <select id='studentAppliedForCourse'>
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type='button' onclick="viewEnrolledOnClick()">SUBMIT</button>
+        </form>
+        <table>
+                <thead>
+                        <tr>
+                                <td>Roll</td><td>Name</td><td>Year</td>
+                        </tr>
+                </thead>
+                <tbody id='studentAppliedForCourseTable'>
+                        
+                </tbody>
+        </table>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+
+        <div class="coursesTakenByStudent" align="center">
+        <fieldset><legend>Table To See Courses Taken By Student</legend>
+        <form>
+                <select id='coursesTakenByStudent'>
+                        <option selected="selected" value="">Select Student Roll</option>
+                </select>
+                <button type="button" onclick="viewCoursesTakenOnClick()">SUBMIT</button>
+        </form>
+        <table>
+                <thead>
+                        <tr>
+                                <td>Id</td><td>Name</td>
+                        </tr>
+                </thead>
+                <tbody id='coursesTakenByStudentTable'>
+                        
+                </tbody>
+        </table>
+        </fieldset>
+        </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="main.js"></script>
+</html>
+#+END_SRC

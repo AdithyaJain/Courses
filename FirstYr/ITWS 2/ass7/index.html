@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+        <title>ITWS Assignment 6 | [20161109]</title>
+        <style>
+        body{
+        	background-color: #f2f2f2;
+        }
+		h1 {
+    		text-align: center;
+		}
+
+		h2 {
+    		text-align: center;
+		}
+
+		h3 {
+    		text-align: center;
+		} 
+		table {
+    		border-collapse: collapse;
+    		width: 100%;
+		}
+
+		th, td , tr{
+    		padding: 8px;
+    		text-align: center;
+    		border-bottom: 1px solid #ddd;
+		}
+		tr:hover{
+			background-color: #e6e6e6
+		}
+		fieldset{
+			display: block;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow:0 0 5px #999;
+		}
+		legend {
+			background: #f2f2f2;
+		}
+</style>
+</head>
+
+
+<body>
+        <h1 >Javascript OOP</h1>
+
+        
+        <div class="addNewStudent" align="center">
+        <fieldset><legend>Add a New Student</legend>
+        <form id="addNewStudent">
+      		<input name="roll" type="text" id="addNewStudent_roll" placeholder="Roll Number" value=""><br/>
+      		<input name="name" type="text" id="addNewStudent_name" placeholder="Name" value=""><br/>
+      		<input name="year" type="text" id="addNewStudent_year" placeholder="Year" value=""><br/>
+      		<button type="button" onclick="addNewStudentOnClick()">ADD</button>
+      	</div>
+        </form>
+        </fieldset>
+		<br/>        
+
+
+
+        <div class='addNewCourse' align='center'>
+        <fieldset><legend>Add a New Course</legend>
+        <form id="addNewCourse">
+      		<input name="id" type="text" id="addNewCourse_id" placeholder="Course Id" value=""><br/>
+      		<input name="name" type="text" id="addNewCourse_name" placeholder="Course Name" value=""><br/>
+      		<button type="button" onclick="addNewCourseOnclick()">ADD</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+        
+
+
+        <div class="allStudents" align="center">
+        <fieldset><legend>All Students</legend>
+        <table id="allStudents">
+       	<thead>
+        	<tr>
+                <td>Roll</td>
+                <td>Name</td>
+                <td>Year</td>
+        	</tr>
+       	</thead>
+       		<tbody id="allStudentsTable">
+       
+       		</tbody>
+        </table>
+        </fieldset>
+        </div>
+		<br />
+
+        
+
+        <div class="allCourses" align="center">
+        <fieldset><legend>All Courses</legend>
+        <table id="allCourses">
+       	<thead>
+        	<tr>
+                <td>Id</td>
+                <td>Name</td>
+        	</tr>
+       	</thead>
+       	<tbody id="allCoursesTable">       
+       	</tbody>
+        </table>
+        </fieldset>
+        </div>
+        <br/>
+        
+
+
+        <div class="addStudentToCourse" align="center">
+        <fieldset><legend>Add Student to a Course</legend>
+        <form>
+                <select id="addStudentToCourse_student" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <select id="addStudentToCourse_course" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="addStudentToCourseOnClick()">ADD</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+        <div class="dropStudentFromCourse" align="center">
+        <fieldset><legend>Drop Student from a Course</legend>
+        <form>
+                <select id="dropStudentFromCourse_student" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <select id="dropStudentFromCourse_course" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="dropStudentFromCourseOnClick()">DROP</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+        <div class="removeCourse" align="center">
+        <fieldset><legend>Remove a Course from Course List</legend>
+        <form>
+                <select id="removeCourse" value="">
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type="button" onclick="removeCourseOnClick()">REMOVE</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+
+        <div class="removeStudent" align="center">
+        <fieldset><legend>Remove a Student from Students List</legend>
+        <form>
+                <select id="removeStudent" value="">
+                        <option selected="selected" value="">Select Student Id</option>
+                </select>
+                <button type="button" onclick="removeStudentOnClick()">REMOVE</button>
+        </form>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+        <div class="studentAppliedForCourse" align="center">
+        <fieldset><legend>Table To See Students Applied For a Course</legend>
+        <form>
+                <select id='studentAppliedForCourse'>
+                        <option selected="selected" value="">Select Course Id</option>
+                </select>
+                <button type='button' onclick="viewEnrolledOnClick()">SUBMIT</button>
+        </form>
+        <table>
+                <thead>
+                        <tr>
+                                <td>Roll</td><td>Name</td><td>Year</td>
+                        </tr>
+                </thead>
+                <tbody id='studentAppliedForCourseTable'>
+                        
+                </tbody>
+        </table>
+        </fieldset>
+        </div>
+        <br/>
+
+
+
+
+
+        <div class="coursesTakenByStudent" align="center">
+        <fieldset><legend>Table To See Courses Taken By Student</legend>
+        <form>
+                <select id='coursesTakenByStudent'>
+                        <option selected="selected" value="">Select Student Roll</option>
+                </select>
+                <button type="button" onclick="viewCoursesTakenOnClick()">SUBMIT</button>
+        </form>
+        <table>
+                <thead>
+                        <tr>
+                                <td>Id</td><td>Name</td>
+                        </tr>
+                </thead>
+                <tbody id='coursesTakenByStudentTable'>
+                        
+                </tbody>
+        </table>
+        </fieldset>
+        </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="main.js"></script>
+</html>

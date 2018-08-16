@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h3>Add New Student</h3>
+    <form action='{{ request.path }}' method="POST">
+        <input type="text" name="code" placeholder="Course Code"/><br/>
+        <input type="text" name="name" placeholder="Name"><br/>
+        <input type="text" name="description" placeholder="Description"><br/>
+        <input type="submit" value='submit'/>
+	</form>
+</body>
+</html>

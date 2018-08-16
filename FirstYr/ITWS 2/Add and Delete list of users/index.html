@@ -1,0 +1,91 @@
+<html>
+  <head>
+  <link rel="stylesheet" type="text/css" href="common.css" />
+  <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+  </head>
+  <body>
+    <div id="index-container" class="hidden">
+      <div id="add-user-btn">
+        <p> List of Users </p>
+        <ul id="add-user">
+          <li>
+            <button id="add">Add</button>
+          </li>
+        </ul>
+      </div>
+      
+      <div id="get-all-users-container">
+        <ul id="users-list">
+        </ul>
+      </div>
+    
+      <label id="error-box" class="error hidden">Error</label>
+    
+    </div>
+    <div id="add-user-container" class="hidden">
+      <p> Add User </p>
+      <ul id="add-user">
+        <li>
+          <label> Name:</label>
+          <input id="name-box" type="text"></input>
+        </li>
+    
+        <li>
+          <label> Email:</label>
+          <input id="email-box" type="text"></input>
+        </li>
+    
+        <li>
+          <button id="add">Add</button>
+          <button id="cancel">Cancel</button>
+        </li>
+      </ul>
+      <label id="error-box" class="error hidden"></label>
+    </div>
+    
+    <div id="delete-user-container" class="hidden">
+      <p> Delete User </p>
+      <ul id="delete-user">
+        <li>
+          <label> Name:</label>
+          <input id="delete-name-box" type="text"></input>
+        </li>
+    
+        <li>
+          <label> Email:</label>
+          <input id="delete-email-box" type="text"></input>
+        </li>
+    
+        <li>
+          <button id="delete">Delete</button>
+          <button id="cancel">Cancel</button>
+        </li>
+      </ul>
+      <label id="error-box" class="error hidden">Error</label>
+    </div>
+    
+    <div id="edit-user-container" class="hidden">
+      <p> Edit User </p>
+      <ul id="edit-user">
+        <li>
+          <label> Name:</label>
+          <input id="name-box" type="text"></input>
+        </li>
+    
+        <li>
+          <label> Email:</label>
+          <input id="email-box" type="text"></input>
+        </li>
+    
+        <li>
+          <button id="done">Done</button>
+          <button id="cancel">Cancel</button>
+        </li>
+      </ul>
+    
+      <label id="error-box" class="error hidden"></label>
+    </div>
+    
+  </body>
+</html>

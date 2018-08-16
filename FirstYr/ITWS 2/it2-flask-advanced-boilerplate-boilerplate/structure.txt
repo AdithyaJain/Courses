@@ -1,0 +1,29 @@
+.
+├── app
+│   ├── courses
+│   │   ├── controllers.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   ├── __init__.py
+│   ├── report
+│   │   ├── controllers.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   ├── static
+│   ├── students
+│   │   ├── controllers.py
+│   │   ├── forms.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   └── templates
+│       ├── courses
+│       │   └── index.html
+│       ├── report
+│       │   ├── courses_for_student.html
+│       │   └── students_for_course.html
+│       └── students
+│           └── index.html
+├── app.db
+├── config.py
+├── requirements.txt
+├── run.py

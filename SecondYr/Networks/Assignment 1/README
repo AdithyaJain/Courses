@@ -1,0 +1,14 @@
+20161108
+20161109
+Q1
+Compile and run both server and client code.
+Enter a file required by client and press enter. Server sends file to client
+Enter 'exit!' and server and client both exit.
+
+Q2 (Same for persistent and non persistent)
+Run both server and client.
+Enter a file required by client and press enter. Server sends file to client
+Enter 'exit!' and server and client both exit.
+
+Note: We put our data files in server folder since we only noticed the requirement of data folder at the end moment while submitting.
+

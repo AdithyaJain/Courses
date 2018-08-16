@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html prefix="og: http://ogp.me/ns#" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" lang="en-US"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+				    <meta charset="UTF-8">
+				    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+            				    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				    <link rel="profile" href="http://gmpg.org/xfn/11">
+				    <link rel="pingback" href="http://yonik.com/xmlrpc.php">
+
+				   <!-- html5shiv for IE8 and less  -->
+				    <!--[if lt IE 9]>
+				      <script src="http://yonik.com/wp-content/themes/customizr/inc/assets/js/html5.js"></script>
+				    <![endif]-->
+				    <title>Solr Query Syntax and Examples</title>
+
+<!-- This site is optimized with the Yoast SEO plugin v5.4 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Solr search and Solr query syntax examples, boolean queries, proximity/phrase queries, boosted and constant score, filter query, and query comments.">
+<link rel="canonical" href="http://yonik.com/solr/query-syntax/">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Solr Query Syntax and Examples">
+<meta property="og:description" content="Solr search and Solr query syntax examples, boolean queries, proximity/phrase queries, boosted and constant score, filter query, and query comments.">
+<meta property="og:url" content="http://yonik.com/solr/query-syntax/">
+<meta property="og:site_name" content="Solr 'n Stuff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="Solr search and Solr query syntax examples, boolean queries, proximity/phrase queries, boosted and constant score, filter query, and query comments.">
+<meta name="twitter:title" content="Solr Query Syntax and Examples">
+<meta name="twitter:site" content="@lucene_solr">
+<meta name="twitter:creator" content="@lucene_solr">
+<script id="twitter-wjs" src="Solr%20Query%20Syntax%20and%20Examples_files/widgets.js"></script><script async="" src="Solr%20Query%20Syntax%20and%20Examples_files/analytics.js"></script><script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"WebSite","@id":"#website","url":"http:\/\/yonik.com\/","name":"Solr &#039;n Stuff","potentialAction":{"@type":"SearchAction","target":"http:\/\/yonik.com\/?s={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"Person","url":"http:\/\/yonik.com\/solr\/query-syntax\/","sameAs":["https:\/\/www.linkedin.com\/in\/yonik","https:\/\/twitter.com\/lucene_solr"],"@id":"#person","name":"Yonik Seeley"}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Solr 'n Stuff » Feed" href="http://yonik.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Solr 'n Stuff » Comments Feed" href="http://yonik.com/comments/feed/">
+<!-- This site uses the Google Analytics by MonsterInsights plugin v6.2.2 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+<script type="text/javascript" data-cfasync="false">
+		var disableStr = 'ga-disable-UA-33395076-1';
+
+	/* Function to detect opted out users */
+	function __gaTrackerIsOptedOut() {
+		return document.cookie.indexOf(disableStr + '=true') > -1;
+	}
+
+	/* Disable tracking if the opt-out cookie exists. */
+	if ( __gaTrackerIsOptedOut() ) {
+		window[disableStr] = true;
+	}
+
+	/* Opt-out function */
+	function __gaTrackerOptout() {
+	  document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+	  window[disableStr] = true;
+	}
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+
+	__gaTracker('create', 'UA-33395076-1', 'auto');
+	__gaTracker('set', 'forceSSL', true);
+	__gaTracker('send','pageview');
+</script>
+<!-- / Google Analytics by MonsterInsights -->
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/yonik.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.8.1"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,56826,8203,55356,56819),0,0),c=j.toDataURL(),b===c&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55358,56794,8205,9794,65039),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55358,56794,8203,9794,65039),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="Solr%20Query%20Syntax%20and%20Examples_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="tc-gfonts-css" href="Solr%20Query%20Syntax%20and%20Examples_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="toc-screen-css" href="Solr%20Query%20Syntax%20and%20Examples_files/screen.css" type="text/css" media="all">
+<link rel="stylesheet" id="customizr-common-css" href="Solr%20Query%20Syntax%20and%20Examples_files/tc_common.css" type="text/css" media="all">
+<link rel="stylesheet" id="customizr-skin-css" href="Solr%20Query%20Syntax%20and%20Examples_files/blue.css" type="text/css" media="all">
+<style id="customizr-skin-inline-css" type="text/css">
+        @font-face {
+          font-family: 'FontAwesome';
+          src:url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.eot');
+          src:url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+              url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.woff2') format('woff2'),
+              url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.woff') format('woff'),
+              url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.ttf') format('truetype'),
+              url('http://yonik.com/wp-content/themes/customizr/inc/assets/css/fonts/fonts/fontawesome-webfont.svg#fontawesomeregular') format('svg');
+        }
+        
+
+                .site-title,.site-description,h1,h2,h3,.tc-dropcap {
+                  font-family : 'Fjalla One';
+                  font-weight : 400;
+                }
+
+                body,.navbar .nav>li>a {
+                  font-family : 'Cantarell';
+                  font-weight : 400;
+                }
+
+          body,.navbar .nav>li>a {
+            font-size : 15px;
+            line-height : 20px;
+          }
+table { border-collapse: separate; }
+                         body table { border-collapse: collapse; }
+                        
+.sticky-enabled .tc-shrink-on .site-logo img {
+    					height:30px!important;width:auto!important
+    				}
+
+    				.sticky-enabled .tc-shrink-on .brand .site-title {
+    					font-size:0.6em;opacity:0.8;line-height:1.2em
+    				}
+
+code {
+  color: navy;
+ border-style:none;
+ font-weight:bold;
+ font-size:95%;
+ border:0;
+ padding:0;
+}
+
+</style>
+<link rel="stylesheet" id="customizr-style-css" href="Solr%20Query%20Syntax%20and%20Examples_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="fancyboxcss-css" href="Solr%20Query%20Syntax%20and%20Examples_files/jquery.css" type="text/css" media="all">
+<script type="text/javascript">
+/* <![CDATA[ */
+var monsterinsights_frontend = {"js_events_tracking":"true","is_debug_mode":"false","download_extensions":"doc,exe,js,pdf,ppt,tgz,zip,xls","inbound_paths":"","home_url":"http:\/\/yonik.com","track_download_as":"event","internal_label":"int","hash_tracking":"false"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/frontend.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/jquery.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/jquery-migrate.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/jquery_002.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var TCParams = {"_disabled":[],"FancyBoxState":"1","FancyBoxAutoscale":"1","SliderName":"","SliderDelay":"","SliderHover":"1","centerSliderImg":"1","SmoothScroll":{"Enabled":false,"Options":{"touchpadSupport":false}},"anchorSmoothScroll":"linear","anchorSmoothScrollExclude":{"simple":["[class*=edd]",".tc-carousel-control",".carousel-control","[data-toggle=\"modal\"]","[data-toggle=\"dropdown\"]","[data-toggle=\"tooltip\"]","[data-toggle=\"popover\"]","[data-toggle=\"collapse\"]","[data-toggle=\"tab\"]","[class*=upme]","[class*=um-]"],"deep":{"classes":[],"ids":[]}},"ReorderBlocks":"1","centerAllImg":"1","HasComments":"","LeftSidebarClass":".span3.left.tc-sidebar","RightSidebarClass":".span3.right.tc-sidebar","LoadModernizr":"1","stickyCustomOffset":{"_initial":0,"_scrolling":0,"options":{"_static":true,"_element":""}},"stickyHeader":"1","dropdowntoViewport":"","timerOnScrollAllBrowsers":"1","extLinksStyle":"","extLinksTargetExt":"","extLinksSkipSelectors":{"classes":["btn","button"],"ids":[]},"dropcapEnabled":"","dropcapWhere":{"post":"","page":""},"dropcapMinWords":"50","dropcapSkipSelectors":{"tags":["IMG","IFRAME","H1","H2","H3","H4","H5","H6","BLOCKQUOTE","UL","OL"],"classes":["btn"],"id":[]},"imgSmartLoadEnabled":"","imgSmartLoadOpts":{"parentSelectors":[".article-container",".__before_main_wrapper",".widget-front"],"opts":{"excludeImg":[".tc-holder-img"]}},"goldenRatio":"1.618","gridGoldenRatioLimit":"350","isSecondMenuEnabled":"","secondMenuRespSet":"in-sn-before"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/tc-scripts.js"></script>
+<link rel="https://api.w.org/" href="http://yonik.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://yonik.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://yonik.com/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 4.8.1">
+<link rel="shortlink" href="http://yonik.com/?p=1624">
+<link rel="alternate" type="application/json+oembed" href="http://yonik.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fyonik.com%2Fsolr%2Fquery-syntax%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://yonik.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fyonik.com%2Fsolr%2Fquery-syntax%2F&amp;format=xml">
+<link rel="stylesheet" type="text/css" href="Solr%20Query%20Syntax%20and%20Examples_files/shCore.css"><link rel="stylesheet" type="text/css" href="Solr%20Query%20Syntax%20and%20Examples_files/shThemeDefault.css"><style type="text/css" id="syntaxhighlighteranchor"></style>
+				<style></style><script type="text/javascript" charset="utf-8" async="" src="Solr%20Query%20Syntax%20and%20Examples_files/button.js"></script></head>
+				
+	<body class="page-template-default page page-id-1624 page-child parent-pageid-277 tc-fade-hover-links tc-l-sidebar tc-sticky-header sticky-disabled tc-transparent-on-scroll skin-blue tc-center-images tc-regular-menu mozilla" itemscope="" itemtype="http://schema.org/WebPage">
+
+    
+    <div id="tc-page-wrap" class="">
+
+  		
+  	   	<header class="tc-header clearfix row-fluid tc-tagline-on tc-title-logo-on  tc-shrink-on tc-menu-on logo-left tc-second-menu-in-sn-before-when-mobile" role="banner" style="height: auto; top: 0px;">
+  			      <div class="brand span3 pull-left ">
+
+        <h1><a class="site-title" href="http://yonik.com/" title="Solr 'n Stuff | Open source search and analytics">Solr 'n Stuff</a></h1>
+      </div> <!-- brand span3 pull-left -->
+      <div class="container outside"><h2 class="site-description">Open source search and analytics</h2></div>      	<div class="navbar-wrapper clearfix span9 tc-submenu-fade tc-submenu-move tc-open-on-hover pull-menu-left">
+        	<div class="navbar resp">
+          		<div class="navbar-inner" role="navigation">
+            		<div class="row-fluid">
+              		<div class="social-block span5"><a class="social-icon icon-feed" href="http://yonik.com/feed/rss/" title="Subscribe to my rss feed"></a><a class="social-icon icon-twitter" href="https://twitter.com/lucene_solr" title="Follow me on Twitter" target="_blank"></a><a class="social-icon icon-google" href="https://twitter.com/lucene_solr" title="Follow me on Google+" target="_blank"></a><a class="social-icon icon-linkedin" href="https://www.linkedin.com/in/yonik" title="Follow me on LinkedIn" target="_blank"></a></div><h2 class="span7 inside site-description">Open source search and analytics</h2><div class="nav-collapse collapse tc-hover-menu-wrapper"><ul class="nav tc-hover-menu"><li class="page_item page-item-1547 menu-item"><a href="http://yonik.com/download/">Apache Solr Downloads</a></li><li class="page_item page-item-277 page_item_has_children current_page_ancestor current_page_parent dropdown menu-item dropdown dropdown"><a href="http://yonik.com/solr/">Unofficial Solr Guide <strong class="caret"></strong></a><ul class="dropdown-menu"><li class="page_item page-item-1969 menu-item"><a href="http://yonik.com/solr/atomic-updates/">Atomic Updates</a></li><li class="page_item page-item-307 menu-item"><a href="http://yonik.com/solr/optimistic-concurrency/">Optimistic Concurrency</a></li><li class="page_item page-item-361 menu-item"><a href="http://yonik.com/solr/realtime-get/">Realtime Get</a></li><li class="page_item page-item-384 menu-item"><a href="http://yonik.com/solr/solr-tutorial/">Solr 5 Tutorial</a></li><li class="page_item page-item-1971 menu-item"><a href="http://yonik.com/solr/solr-prerequisites/">Solr Prerequisites</a></li><li class="page_item page-item-1624 current_page_item menu-item"><a href="http://yonik.com/solr/query-syntax/">Solr Query Syntax</a></li><li class="page_item page-item-961 menu-item"><a href="http://yonik.com/solr/paging-and-deep-paging/">Sorting, Paging, and Deep Paging in Solr</a></li></ul></li><li class="page_item page-item-5 menu-item"><a href="http://yonik.com/about/">Yonik Seeley</a></li></ul></div><div class="btn-toggle-nav pull-right"><button type="button" class="btn menu-btn" data-toggle="collapse" data-target=".nav-collapse" title="Open the menu"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </button></div>          			</div><!-- /.row-fluid -->
+          		</div><!-- /.navbar-inner -->
+        	</div><!-- /.navbar resp -->
+      	</div><!-- /.navbar-wrapper -->
+    	  		</header>
+  		<div id="tc-reset-margin-top" class="container-fluid" style="margin-top: 118px;"></div><div id="main-wrapper" class="container">
+
+    
+    <div class="container" role="main">
+        <div class="row column-content-wrapper">
+
+            
+        <div class="span3 left tc-sidebar">
+           <div id="left" class="widget-area" role="complementary">
+              <aside id="text-3" class="widget widget_text">			<div class="textwidget"><div align="left">
+
+<a href="http://twitter.com/lucene_solr/">
+<img src="Solr%20Query%20Syntax%20and%20Examples_files/d826abbc3ebe028c7db08a03a159503f.jpeg">
+</a>
+&nbsp;
+<iframe id="twitter-widget-0" scrolling="no" allowtransparency="true" class="twitter-follow-button twitter-follow-button-rendered" style="position: static; visibility: visible; width: 161px; height: 28px;" title="Twitter Follow Button" src="Solr%20Query%20Syntax%20and%20Examples_files/follow_button.html" data-screen-name="lucene_solr" frameborder="0"></iframe>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+</div>
+<p>
+&nbsp;
+</p><p></p></div>
+		</aside>		<aside id="recent-posts-6" class="widget widget_recent_entries">		<h3 class="widget-title">Recent Posts</h3>		<ul>
+					<li>
+				<a href="http://yonik.com/solr-7-2/">Solr 7.2 Features</a>
+						</li>
+					<li>
+				<a href="http://yonik.com/solr-7-1/">Solr 7.1 Features</a>
+						</li>
+					<li>
+				<a href="http://yonik.com/solr-8/">Solr 8 Features</a>
+						</li>
+					<li>
+				<a href="http://yonik.com/solr-6-6/">Solr 6.6 Features</a>
+						</li>
+					<li>
+				<a href="http://yonik.com/solr-6-5/">Solr 6.5 Features</a>
+						</li>
+				</ul>
+		</aside>		<aside id="nav_menu-3" class="widget widget_nav_menu"><h3 class="widget-title">The Unofficial Solr Guide</h3><div class="menu-solr-container"><ul id="menu-solr" class="menu"><li id="menu-item-327" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-page-parent menu-item-327"><a href="http://yonik.com/solr/">Unofficial Solr Guide</a></li>
+<li id="menu-item-410" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-410"><a href="http://yonik.com/solr/solr-tutorial/">Solr 6 Tutorial</a></li>
+<li id="menu-item-2227" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2227"><a href="http://yonik.com/solr/paging-and-deep-paging/">Sorting, Paging, and Deep Paging</a></li>
+<li id="menu-item-2217" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2217"><a href="http://yonik.com/solr/realtime-get/">Realtime Get</a></li>
+<li id="menu-item-2215" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2215"><a href="http://yonik.com/solr/atomic-updates/">Atomic Updates</a></li>
+<li id="menu-item-2216" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2216"><a href="http://yonik.com/solr/optimistic-concurrency/">Optimistic Concurrency</a></li>
+<li id="menu-item-2229" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1624 current_page_item menu-item-2229"><a href="http://yonik.com/solr/query-syntax/">Solr Query Syntax</a></li>
+<li id="menu-item-2950" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2950"><a href="http://yonik.com/json-facet-api/">JSON Facet API</a>
+<ul class="sub-menu">
+	<li id="menu-item-2952" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2952"><a href="http://yonik.com/solr-facet-functions/">Statistics &amp; Aggregations</a></li>
+	<li id="menu-item-2953" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2953"><a href="http://yonik.com/solr-subfacets/">Sub-Facets</a></li>
+	<li id="menu-item-2949" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2949"><a href="http://yonik.com/multi-select-faceting/">Multi-Select Faceting</a></li>
+</ul>
+</li>
+<li id="menu-item-2954" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2954"><a href="http://yonik.com/solr-json-request-api/">JSON Request API</a></li>
+<li id="menu-item-2951" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2951"><a href="http://yonik.com/solr-nested-objects/">Nested Documents</a></li>
+</ul></div></aside>            </div><!-- //#left or //#right -->
+        </div><!--.tc-sidebar -->
+
+        
+                <div id="content" class="span9 article-container tc-gallery-style">
+
+                    
+                        
+                                                                                    
+                                                                    <article id="page-1624" class="row-fluid post-1624 page type-page status-publish hentry hover">
+                                                <header class="entry-header">
+          <h1 class="entry-title ">Solr Query Syntax</h1><hr class="featurette-divider __before_content">        </header>
+        
+        <div class="entry-content">
+          <h2>Solr Query Syntax</h2>
+<p>The default Solr query syntax used to search an index uses a superset of the Lucene query syntax.</p>
+<h3>Trying a basic query</h3>
+<p>The main query for a solr search is specified via the <code>q</code> parameter.  Standard Solr query syntax is the default (registered as the “lucene” query parser).</p>
+<p><a href="http://localhost:8983/solr/query?q=test">http://localhost:8983/solr/query?q=test</a></p>
+<p>If this is new to you, please check out the <a href="http://yonik.com/solr-tutorial/">Solr Tutorial</a>.</p>
+<p>Adding <code>debug=query</code> to your request will allow you to see how Solr is parsing your query.</p>
+<p><a href="http://localhost:8983/solr/query?debug=query&amp;q=hello">http://localhost:8983/solr/query?debug=query&amp;q=hello</a></p>
+<div><div id="highlighter_935852" class="syntaxhighlighter nogutter  jscript"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="jscript plain">{</code></div><div class="line number2 index1 alt1"><code class="jscript spaces">&nbsp;&nbsp;</code><code class="jscript string">"responseHeader"</code><code class="jscript plain">:{</code></div><div class="line number3 index2 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"status"</code><code class="jscript plain">:0,</code></div><div class="line number4 index3 alt1"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"QTime"</code><code class="jscript plain">:0,</code></div><div class="line number5 index4 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"params"</code><code class="jscript plain">:{</code></div><div class="line number6 index5 alt1"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"q"</code><code class="jscript plain">:</code><code class="jscript string">"hello"</code><code class="jscript plain">,</code></div><div class="line number7 index6 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"debug"</code><code class="jscript plain">:</code><code class="jscript string">"query"</code><code class="jscript plain">}},</code></div><div class="line number8 index7 alt1"><code class="jscript spaces">&nbsp;&nbsp;</code><code class="jscript string">"response"</code><code class="jscript plain">:{</code><code class="jscript string">"numFound"</code><code class="jscript plain">:0,</code><code class="jscript string">"start"</code><code class="jscript plain">:0,</code><code class="jscript string">"docs"</code><code class="jscript plain">:[]</code></div><div class="line number9 index8 alt2"><code class="jscript spaces">&nbsp;&nbsp;</code><code class="jscript plain">},</code></div><div class="line number10 index9 alt1"><code class="jscript spaces">&nbsp;&nbsp;</code><code class="jscript string">"debug"</code><code class="jscript plain">:{</code></div><div class="line number11 index10 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"rawquerystring"</code><code class="jscript plain">:</code><code class="jscript string">"hello"</code><code class="jscript plain">,</code></div><div class="line number12 index11 alt1"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"querystring"</code><code class="jscript plain">:</code><code class="jscript string">"hello"</code><code class="jscript plain">,</code></div><div class="line number13 index12 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"parsedquery"</code><code class="jscript plain">:</code><code class="jscript string">"text:hello"</code><code class="jscript plain">,</code></div><div class="line number14 index13 alt1"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"parsedquery_toString"</code><code class="jscript plain">:</code><code class="jscript string">"text:hello"</code><code class="jscript plain">,</code></div><div class="line number15 index14 alt2"><code class="jscript spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="jscript string">"QParser"</code><code class="jscript plain">:</code><code class="jscript string">"LuceneQParser"</code><code class="jscript plain">}}</code></div></div></td></tr></tbody></table></div></div>
+<p>The <code>response</code> section will normally contain the top ranking documents for the query.  In this example, no documents matched the query.<br>
+In the debug section, one can see how the query was parsed, and the fact that <code>text</code> was used as the default field to search.</p>
+<h3>Basic Queries</h3>
+<p>A “term” query is a single word query in a single field that must match exactly.<br>
+In this example <code>text</code> is the field name, and <code>hello</code> is the word we are going to match in that field.</p>
+<pre>text:hello
+</pre>
+<h3>Phrase Query</h3>
+<p>A phrase query matches multiple terms (words) in sequence.</p>
+<pre>text:"yonik seeley"
+</pre>
+<p>This query <strong>will match</strong> text containing <code>Yonik Seeley</code> but will <strong>not match</strong> <code>Yonik C Seeley</code> or <code>Seeley Yonik</code>.</p>
+<p>Internally, a phrase query is created when the fieldType produces 
+multiple terms for the given value.  For the example above, the 
+fieldType splits on whitespace and lowercases the result, and we get two
+ terms… [<code>yonik</code>, <code>seeley</code>].  If our fieldType had been <code>string</code>, a single term of <code>yonik seeley</code> would have been produced since <code>string</code> fields do not change values or do text analysis in any way.</p>
+<h3>Proximity Query (aka Sloppy Phrase Query)</h3>
+<p>A proximity query, is like a phrase query with a tilda (~) followed 
+by a slop that specifies the number of term position moves (edits) 
+allowed.</p>
+<pre>text:"solr analytics"~1
+</pre>
+<p>This query <strong>will match</strong> text containing <code>solr analytics</code>, <code>solr faceted analytics</code> (edit distance 1), and <code>analytics solr</code> (edit distance 1).  It will not match <code>solr super faceted analytics</code> or <code>analytics faceted solr</code> since those would both require an edit distance of 2 to get the terms into the matching positions.</p>
+<h3>Boolean Query</h3>
+<p>A boolean query contains multiple clauses.  A clause may be optional, mandatory, or prohibited.</p>
+<pre>solr search
+</pre>
+<p>The default operator is “OR”, meaning that clauses are optional.  
+When there are no mandatory clauses, at least one of the optional 
+clauses in a query must match for the full query to match.  The example 
+query above will thus match documents containing <code>solr</code> or <code>search</code> (or both) in the default search field.</p>
+<p>Boolean query examples:</p>
+<pre>+solr +search facet -highlight     /* uses + for mandatory and - for prohibited */
+solr AND search OR facet NOT highlight  /* this is equivalent to the first query */
+</pre>
+<p>Semantics: <code>solr</code> and <code>search</code> must both match, <code>highlight</code> must not match.  <code>facet</code> may or may not match but will contribute to the query score if it does (i.e. the presence of the <code>facet</code> only affects scores of matching documents, not which documents match.)</p>
+<pre>+text:solr text:facet text:analytics
+text:(+solr facet analytics)  /* This is equivalent to the first query *?
+</pre>
+<p>The query above just demonstrates an optional syntax for specifying multiple clauses with the same field.</p>
+<pre>(+title:solr +title:(analytics faceting)) OR (+body:solr +body:(analytics faceting)) 
+</pre>
+<p>The query above uses parenthesis for precedence.  Both <code>solr</code> and either <code>analytics</code> or <code>faceting</code> must match in the <code>title</code> field or in the <code>body</code> field.</p>
+<h3>Boosted Query</h3>
+<p>Any query clause can be boosted with the <code>^</code> operator.  
+The boost is multiplied into the normal score for the clause and will 
+affect its importance relative to other clauses.</p>
+<p>Boosted Query Examples:</p>
+<pre>text:solr<strong>^10</strong> text:rocks
+text:(solr<strong>^10</strong> rocks)
+(inStock:true AND text:solr)<strong>^123.45</strong> text:hi
+</pre>
+<h3>Range Query</h3>
+<p>A range query selects documents with values between a specified lower
+ and upper bound.  Range queries work on numeric fields, date fields, 
+and even string and text fields.</p>
+<p>Range Query Examples:</p>
+<pre>  age:[18 TO 30]       // matches age 18-30 inclusive (endpoints 18 and 30 are included)
+  age:[18 TO 30}       // matches age&gt;=18 and age&lt;30
+  age:[65 TO *]        // "open ended" range matches age&gt;65
+  age:[* TO *]         // matches all documents with age set
+</pre>
+<p>Range Query on Text Fields:</p>
+<pre>  name:[apple TO banana]  // matches *any* term/word in the name field between apple and banana   
+</pre>
+<h3 id="ConstantScoreQuery">Constant Score Query</h3>
+<p>A ConstantScoreQuery is like a boosted query, but it produces the 
+same score for every document that matches the query.  The score 
+produced is equal to the query boost.  The <code>^=</code> operator is used to turn any query clause into a ConstantScoreQuery.</p>
+<p>Constant Score Query Examples:</p>
+<pre>+color:blue<strong>^=1</strong> text:shoes
+(inStock:true text:solr)<strong>^=100</strong> native code faceting
+</pre>
+<h3 id="FilterQuery">Filter Query</h3>
+<p>(Since Solr 5.4)<br>
+A filter query retrieves a set of documents matching a query from the 
+filter cache.  Since scores are not cached, all documents that match the
+ filter produce the same score (0 by default).  Cached filters will be 
+extremely fast when they are used again in another query.</p>
+<p>Filter Query Example:</p>
+<pre>description:HDTV OR <strong>filter</strong>(+promotion:tv +promotion_date:[NOW/DAY-7DAYS TO NOW/DAY+1DAY])
+</pre>
+<p>The power of the <code>filter()</code> syntax is that it may be used anywhere within a lucene/solr query syntax.  Normal <code>fq</code> support is limited to top-level conjunctions.  However when normal top-level <code>fq</code> <a href="http://yonik.com/advanced-filter-caching-in-solr/">filter caching</a> can be used, that form is preferred.</p>
+<h3 id="comments">Query Comments</h3>
+<p>(Since Solr 5.3)<br>
+One can embed comments in a query using C-style comments surrounded with <code>/* */</code>.  Comments can be nested.</p>
+<p>Query Comments Example:</p>
+<pre>description:HDTV /* TODO: +promotion:tv +promotion_date:[NOW/DAY-7DAYS TO NOW/DAY+1DAY] */
+</pre>
+        </div>
+
+                                            </article>
+                                
+                            
+                        
+                    
+                </div><!--.article-container -->
+
+           
+        </div><!--.row -->
+    </div><!-- .container role: main -->
+
+    
+</div><!-- //#main-wrapper -->
+
+  		<!-- FOOTER -->
+  		<footer id="footer" class="">
+  		 					<div class="container footer-widgets ">
+                    <div class="row widget-area" role="complementary">
+												
+							<div id="footer_one" class="span4">
+																
+										<aside id="tag_cloud-3" class="widget widget_tag_cloud"><h3 class="widget-title">Tags</h3><div class="tagcloud"><a href="http://yonik.com/tag/block-join/" class="tag-cloud-link tag-link-62 tag-link-position-1" style="font-size: 8pt;" aria-label="block join (2 items)">block join</a>
+<a href="http://yonik.com/tag/block-join-example/" class="tag-cloud-link tag-link-63 tag-link-position-2" style="font-size: 8pt;" aria-label="block join example (2 items)">block join example</a>
+<a href="http://yonik.com/tag/excludetags/" class="tag-cloud-link tag-link-241 tag-link-position-3" style="font-size: 11pt;" aria-label="excludeTags (3 items)">excludeTags</a>
+<a href="http://yonik.com/tag/facet-analytics/" class="tag-cloud-link tag-link-82 tag-link-position-4" style="font-size: 8pt;" aria-label="facet analytics (2 items)">facet analytics</a>
+<a href="http://yonik.com/tag/faceted-search/" class="tag-cloud-link tag-link-11 tag-link-position-5" style="font-size: 13.5pt;" aria-label="Faceted Search (4 items)">Faceted Search</a>
+<a href="http://yonik.com/tag/facet-functions/" class="tag-cloud-link tag-link-84 tag-link-position-6" style="font-size: 8pt;" aria-label="facet functions (2 items)">facet functions</a>
+<a href="http://yonik.com/tag/faceting-performance/" class="tag-cloud-link tag-link-86 tag-link-position-7" style="font-size: 8pt;" aria-label="faceting performance (2 items)">faceting performance</a>
+<a href="http://yonik.com/tag/facet-statistics/" class="tag-cloud-link tag-link-85 tag-link-position-8" style="font-size: 11pt;" aria-label="facet statistics (3 items)">facet statistics</a>
+<a href="http://yonik.com/tag/field-collapsing/" class="tag-cloud-link tag-link-12 tag-link-position-9" style="font-size: 8pt;" aria-label="field collapsing (2 items)">field collapsing</a>
+<a href="http://yonik.com/tag/frange/" class="tag-cloud-link tag-link-15 tag-link-position-10" style="font-size: 8pt;" aria-label="frange (2 items)">frange</a>
+<a href="http://yonik.com/tag/function-queries/" class="tag-cloud-link tag-link-16 tag-link-position-11" style="font-size: 8pt;" aria-label="function queries (2 items)">function queries</a>
+<a href="http://yonik.com/tag/function-query/" class="tag-cloud-link tag-link-17 tag-link-position-12" style="font-size: 11pt;" aria-label="function query (3 items)">function query</a>
+<a href="http://yonik.com/tag/geo-search/" class="tag-cloud-link tag-link-18 tag-link-position-13" style="font-size: 11pt;" aria-label="geo search (3 items)">geo search</a>
+<a href="http://yonik.com/tag/json-facets/" class="tag-cloud-link tag-link-106 tag-link-position-14" style="font-size: 11pt;" aria-label="JSON facets (3 items)">JSON facets</a>
+<a href="http://yonik.com/tag/lucene/" class="tag-cloud-link tag-link-287 tag-link-position-15" style="font-size: 15.5pt;" aria-label="lucene (5 items)">lucene</a>
+<a href="http://yonik.com/tag/lucene-6/" class="tag-cloud-link tag-link-114 tag-link-position-16" style="font-size: 8pt;" aria-label="lucene 6 (2 items)">lucene 6</a>
+<a href="http://yonik.com/tag/lucidworks/" class="tag-cloud-link tag-link-26 tag-link-position-17" style="font-size: 8pt;" aria-label="lucidworks (2 items)">lucidworks</a>
+<a href="http://yonik.com/tag/multi-select-faceting/" class="tag-cloud-link tag-link-238 tag-link-position-18" style="font-size: 8pt;" aria-label="multi-select faceting (2 items)">multi-select faceting</a>
+<a href="http://yonik.com/tag/nested-aggregations/" class="tag-cloud-link tag-link-124 tag-link-position-19" style="font-size: 8pt;" aria-label="nested aggregations (2 items)">nested aggregations</a>
+<a href="http://yonik.com/tag/nested-facets/" class="tag-cloud-link tag-link-125 tag-link-position-20" style="font-size: 8pt;" aria-label="nested facets (2 items)">nested facets</a>
+<a href="http://yonik.com/tag/off-heap/" class="tag-cloud-link tag-link-126 tag-link-position-21" style="font-size: 8pt;" aria-label="off-heap (2 items)">off-heap</a>
+<a href="http://yonik.com/tag/off-heap-fieldcache/" class="tag-cloud-link tag-link-130 tag-link-position-22" style="font-size: 11pt;" aria-label="off-heap FieldCache (3 items)">off-heap FieldCache</a>
+<a href="http://yonik.com/tag/pivot-facets/" class="tag-cloud-link tag-link-226 tag-link-position-23" style="font-size: 11pt;" aria-label="pivot facets (3 items)">pivot facets</a>
+<a href="http://yonik.com/tag/post-filter/" class="tag-cloud-link tag-link-31 tag-link-position-24" style="font-size: 8pt;" aria-label="post filter (2 items)">post filter</a>
+<a href="http://yonik.com/tag/result-grouping/" class="tag-cloud-link tag-link-36 tag-link-position-25" style="font-size: 8pt;" aria-label="result grouping (2 items)">result grouping</a>
+<a href="http://yonik.com/tag/scalability/" class="tag-cloud-link tag-link-37 tag-link-position-26" style="font-size: 8pt;" aria-label="scalability (2 items)">scalability</a>
+<a href="http://yonik.com/tag/solr/" class="tag-cloud-link tag-link-290 tag-link-position-27" style="font-size: 22pt;" aria-label="solr (10 items)">solr</a>
+<a href="http://yonik.com/tag/solr-4-0/" class="tag-cloud-link tag-link-41 tag-link-position-28" style="font-size: 17.25pt;" aria-label="solr 4.0 (6 items)">solr 4.0</a>
+<a href="http://yonik.com/tag/solr-5/" class="tag-cloud-link tag-link-146 tag-link-position-29" style="font-size: 11pt;" aria-label="solr 5 (3 items)">solr 5</a>
+<a href="http://yonik.com/tag/solr-6/" class="tag-cloud-link tag-link-147 tag-link-position-30" style="font-size: 8pt;" aria-label="solr 6 (2 items)">solr 6</a>
+<a href="http://yonik.com/tag/solr-facet/" class="tag-cloud-link tag-link-154 tag-link-position-31" style="font-size: 13.5pt;" aria-label="solr facet (4 items)">solr facet</a>
+<a href="http://yonik.com/tag/solr-facet-example/" class="tag-cloud-link tag-link-155 tag-link-position-32" style="font-size: 11pt;" aria-label="solr facet example (3 items)">solr facet example</a>
+<a href="http://yonik.com/tag/solr-facets/" class="tag-cloud-link tag-link-158 tag-link-position-33" style="font-size: 11pt;" aria-label="solr facets (3 items)">solr facets</a>
+<a href="http://yonik.com/tag/solr-features/" class="tag-cloud-link tag-link-159 tag-link-position-34" style="font-size: 8pt;" aria-label="solr features (2 items)">solr features</a>
+<a href="http://yonik.com/tag/solr-garbage-collection/" class="tag-cloud-link tag-link-162 tag-link-position-35" style="font-size: 8pt;" aria-label="solr garbage collection (2 items)">solr garbage collection</a>
+<a href="http://yonik.com/tag/solr-performance/" class="tag-cloud-link tag-link-42 tag-link-position-36" style="font-size: 11pt;" aria-label="solr performance (3 items)">solr performance</a>
+<a href="http://yonik.com/tag/solr-query/" class="tag-cloud-link tag-link-211 tag-link-position-37" style="font-size: 11pt;" aria-label="solr query (3 items)">solr query</a>
+<a href="http://yonik.com/tag/solr-query-example/" class="tag-cloud-link tag-link-212 tag-link-position-38" style="font-size: 8pt;" aria-label="solr query example (2 items)">solr query example</a>
+<a href="http://yonik.com/tag/solr-search/" class="tag-cloud-link tag-link-222 tag-link-position-39" style="font-size: 8pt;" aria-label="solr search (2 items)">solr search</a>
+<a href="http://yonik.com/tag/solr-sorting-performance/" class="tag-cloud-link tag-link-175 tag-link-position-40" style="font-size: 8pt;" aria-label="solr sorting performance (2 items)">solr sorting performance</a>
+<a href="http://yonik.com/tag/solr-spatial/" class="tag-cloud-link tag-link-176 tag-link-position-41" style="font-size: 8pt;" aria-label="solr spatial (2 items)">solr spatial</a>
+<a href="http://yonik.com/tag/solr-tutorial/" class="tag-cloud-link tag-link-209 tag-link-position-42" style="font-size: 8pt;" aria-label="solr tutorial (2 items)">solr tutorial</a>
+<a href="http://yonik.com/tag/sorting-performance/" class="tag-cloud-link tag-link-186 tag-link-position-43" style="font-size: 8pt;" aria-label="sorting performance (2 items)">sorting performance</a>
+<a href="http://yonik.com/tag/spatial-search/" class="tag-cloud-link tag-link-43 tag-link-position-44" style="font-size: 11pt;" aria-label="spatial search (3 items)">spatial search</a>
+<a href="http://yonik.com/tag/subfacets/" class="tag-cloud-link tag-link-195 tag-link-position-45" style="font-size: 8pt;" aria-label="subfacets (2 items)">subfacets</a></div>
+</aside>
+																							</div><!-- .{$key}_widget_class -->
+
+						
+							<div id="footer_two" class="span4">
+																															</div><!-- .{$key}_widget_class -->
+
+						
+							<div id="footer_three" class="span4">
+																															</div><!-- .{$key}_widget_class -->
+
+																	</div><!-- .row.widget-area -->
+				</div><!--.footer-widgets -->
+				    				 <div class="colophon">
+			 	<div class="container">
+			 		<div class="row-fluid">
+					    <div class="span3 social-block pull-left"><span class="tc-footer-social-links-wrapper"><a class="social-icon icon-feed" href="http://yonik.com/feed/rss/" title="Subscribe to my rss feed"></a><a class="social-icon icon-twitter" href="https://twitter.com/lucene_solr" title="Follow me on Twitter" target="_blank"></a><a class="social-icon icon-google" href="https://twitter.com/lucene_solr" title="Follow me on Google+" target="_blank"></a><a class="social-icon icon-linkedin" href="https://www.linkedin.com/in/yonik" title="Follow me on LinkedIn" target="_blank"></a></span></div><div class="span6 credits"><p>· <span class="tc-copyright-text">© 2017</span> <a href="http://yonik.com/" title="Solr 'n Stuff" rel="bookmark">Solr 'n Stuff</a> · <span class="tc-credits-text">Designed by</span> <a href="http://presscustomizr.com/">Press Customizr</a> · <span class="tc-wp-powered-text">Powered by</span> <a class="icon-wordpress" target="_blank" href="https://wordpress.org/" title="Powered by WordPress"></a> ·</p></div>	      			</div><!-- .row-fluid -->
+	      		</div><!-- .container -->
+	      	</div><!-- .colophon -->
+	    	  		</footer>
+    </div><!-- //#tc-page-wrapper -->
+		<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/shCore.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/shBrushJScript.js"></script>
+<script type="text/javascript">
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://yonik.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9b";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://yonik.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['gutter'] = false;
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var tocplus = {"visibility_show":"show","visibility_hide":"hide","width":"Auto"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/front.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/comment-reply.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/core.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/modernizr.js"></script>
+<script type="text/javascript" src="Solr%20Query%20Syntax%20and%20Examples_files/wp-embed.js"></script>
+<div id="tc-footer-btt-wrapper" class="tc-btt-wrapper right"><i class="btt-arrow"></i></div>	
+	<div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:;" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:;" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div></body></html>

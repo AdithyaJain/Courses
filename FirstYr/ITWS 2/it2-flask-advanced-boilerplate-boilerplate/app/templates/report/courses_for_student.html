@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <table>
+        {% for grade in report %}
+        <tr>
+            <td> {{ grade.student_rollno }} </td>
+            <td> {{ grade.course_code }} </td>
+            <td> {{ grade.assignments }} </td>
+            <td> {{ grade.labs }} </td>
+            <td> {{ grade.labs }} </td>
+            <td> {{ grade.mids }}</td>
+            <td> {{ grade.end_sem }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>
